@@ -52,7 +52,7 @@ body {
   width: 60em;
   border-radius: 50%;
   margin: auto;
-  background: 
+  background:
     radial-gradient(circle at 77% 80%, #FDFEB4 2.5%, transparent 2.5%),
     radial-gradient(circle at 75% 83%, #FDFEB4 2%, transparent 2%),
     radial-gradient(circle at 79% 83%, #FDFEB4 1%, transparent 1%),

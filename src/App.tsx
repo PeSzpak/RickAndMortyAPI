@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Portal } from "./components/rickandmorty/portal/portal";
-import { RickAndMorty } from "./components/rickandmorty/RandM";
+import { RickAndMorty } from "./components/rickandmorty/RicksAndMortyCharacters.tsx";
 
 function App() {
   const [showCharacters, setShowCharacters] = useState(false);

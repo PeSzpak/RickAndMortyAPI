@@ -106,6 +106,113 @@
   letter-spacing: 1px;
   box-shadow: 0 0 12px rgba(8,186,227,0.45);
 }
+.no-results-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.no-results-image {
+    max-width: 1200px;
+    width: 60%;
+    border-radius: 16px;
+    border: 2px solid rgba(8,186,227,0.4);
+    box-shadow: 0 0 18px rgba(8,186,227,0.5);
+    object-fit: contain;
+}
+
+.filter-badge {
+  margin-left: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(8,186,227,0.15);
+  color: #CFF36B;
+  border: 1px solid rgba(207,243,107,0.6);
+  font-size: 12px;
+  text-shadow: 0 0 8px rgba(207,243,107,0.4);
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.search-input {
+  flex: 1;
+  max-width: 360px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(8,186,227,0.6);
+  background: rgba(0,0,0,0.8);
+  color: #E5F9FF;
+  font-family: 'Get Schwifty', cursive;
+  font-size: 14px;
+  outline: none;
+  box-shadow: 0 0 12px rgba(8,186,227,0.35);
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: rgba(200,240,255,0.55);
+}
+
+.search-input:focus {
+  border-color: #08BAE3;
+  box-shadow: 0 0 18px rgba(8,186,227,0.6);
+  transform: translateY(-1px);
+}
+
+.clear-search-button {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 2px solid #FF6B6B;
+  background: rgba(0,0,0,0.85);
+  color: #FFB3B3;
+  font-family: 'Get Schwifty', cursive;
+  font-size: 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 12px rgba(255,107,107,0.4);
+  transition: all 0.2s ease;
+}
+
+.clear-search-button:hover {
+  background: #FF6B6B;
+  color: #000;
+  transform: translateY(-1px) scale(1.03);
+}
+
+.search-loading-text {
+  margin-left: 8px;
+  font-family: 'Get Schwifty', cursive;
+  font-size: 12px;
+  color: #08BAE3;
+  text-shadow: 0 0 10px rgba(8,186,227,0.6);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.characters-grid-loading {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  margin-top: 30px;
+}
+
+.no-results-text {
+  margin-top: 20px;
+  text-align: center;
+  font-family: 'Get Schwifty', cursive;
+  font-size: 40px;
+  color: #FFB36B;
+  text-shadow: 0 0 12px rgba(255,179,107,0.6);
+}
 
 .characters-grid {
   display: grid;
@@ -115,7 +222,7 @@
   gap: 22px;
   position: relative;
   z-index: 1;
-  margin-top: 4px;
+  margin-top: 30px;
 }
 
 @media (max-width: 1550px) {
