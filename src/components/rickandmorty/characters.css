@@ -37,26 +37,15 @@
 }
 
 .top-bar {
-  position: sticky;
-  top: 12px;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 20px;
-  margin-bottom: 28px;
-  backdrop-filter: blur(10px);
-  background: radial-gradient(circle at top left, rgba(8,186,227,0.25), transparent 55%),
-              radial-gradient(circle at bottom right, rgba(102,186,79,0.25), transparent 55%),
-              rgba(0,0,0,0.55);
-  border-radius: 999px;
-  border: 1px solid rgba(8,186,227,0.35);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
 .back-button {
   position: static;
+  flex-shrink: 0;
   padding: 10px 22px;
   font-size: 18px;
   font-family: 'Get Schwifty', cursive;
@@ -137,8 +126,8 @@
 .search-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 18px 0 8px;
+  gap: 10px;
+  margin: 0;
   position: relative;
   z-index: 2;
 }
@@ -151,8 +140,8 @@
   border: 2px solid rgba(8,186,227,0.6);
   background: rgba(0,0,0,0.8);
   color: #E5F9FF;
-  font-family: 'Get Schwifty', cursive;
-  font-size: 14px;
+    font-family: 'Creepster','Get Schwifty', cursive;
+  font-size: 16px;
   outline: none;
   box-shadow: 0 0 12px rgba(8,186,227,0.35);
   transition: all 0.2s ease;
@@ -256,8 +245,12 @@
 
   .top-bar {
     flex-direction: column;
-    align-items: stretch;
-    text-align: center;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .search-container {
+    width: 100%;
   }
 
   .characters-title {

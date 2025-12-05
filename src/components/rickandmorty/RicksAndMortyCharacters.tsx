@@ -50,34 +50,38 @@ export function RickAndMorty({ onBack }: RickAndMortyProps) {
     <div className="characters-container">
       <div className="stars-background"></div>
 
-      {onBack && (
-        <button className="back-button" onClick={onBack}>
-          Go Back to Portal
-        </button>
-      )}
+      <div className="top-bar">
+        {onBack && (
+          <button className="back-button" onClick={onBack}>
+            Go Back to Portal
+          </button>
+        )}
 
-      <input
-        type="text"
-        placeholder="search by name:"
-        value={searchTerm}
-        onChange={(e) => {
-          setPage(1);
-          setSearchTerm(e.target.value);
-        }}
-        className="search-input"
-      />
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="search by name:"
+            value={searchTerm}
+            onChange={(e) => {
+              setPage(1);
+              setSearchTerm(e.target.value);
+            }}
+            className="search-input"
+          />
 
-      {isFiltering && (
-        <button
-          className="clear-search-button"
-          onClick={() => {
-            setSearchTerm("");
-            setPage(1);
-          }}
-        >
-          Clear Search
-        </button>
-      )}
+          {isFiltering && (
+            <button
+              className="clear-search-button"
+              onClick={() => {
+                setSearchTerm("");
+                setPage(1);
+              }}
+            >
+              Clear Search
+            </button>
+          )}
+        </div>
+      </div>
 
       <h1 className="characters-title">Characters</h1>
 

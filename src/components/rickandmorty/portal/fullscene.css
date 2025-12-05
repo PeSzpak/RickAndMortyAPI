@@ -382,19 +382,64 @@ body {
   animation: bubble-float 4s ease-in-out infinite alternate;
 }
 
+@media (max-width: 1024px) {
+  body {
+    font-size: 1.4vmin;
+  }
+
+  .container {
+    transform: translate(-50%, -50%) scale(0.75);
+    transform-origin: center center;
+  }
+
+  .portal-button {
+    padding: 10px 30px;
+    font-size: 16px;
+    bottom: 4%;
+  }
+}
+
 @media (max-width: 768px) {
   body {
-    font-size: 0.5vw;
+    font-size: 1.8vmin;
   }
-  
+
   .container {
-    transform: scale(0.5);
-    transform-origin: top center;
+    transform: translate(-50%, -55%) scale(0.55);
+    transform-origin: center center;
   }
-  
+
+  .title {
+    bottom: 9em;
+    left: -6em;
+    transform: scaleX(1.1);
+  }
+
   .portal-button {
-    padding: 10px 28px;
-    font-size: 16px;
-    bottom: 2%;
+    padding: 9px 26px;
+    font-size: 15px;
+    bottom: 5%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 2.2vmin;
+  }
+
+  .container {
+    transform: translate(-50%, -58%) scale(0.45);
+  }
+
+  .title {
+    bottom: 8em;
+    left: -5em;
+    transform: scaleX(1.05);
+  }
+
+  .portal-button {
+    padding: 8px 22px;
+    font-size: 14px;
+    bottom: 6%;
   }
 }
