@@ -6,7 +6,7 @@ export interface Character {
   status: string;
   species: string;
   image: string;
-  episode: { name: string };
+  gender: string ;
   origin: { name: string };
   location: { name: string };
 }
@@ -83,7 +83,7 @@ export function CharacterCard({
               <strong>Origin:</strong> {character.origin.name}
             </p>
             <p className="character-detail">
-              <strong>episode:</strong> {character.episode.name}
+              <strong>gender:</strong> {character.gender}
             </p>
           </div>
         </div>
