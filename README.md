@@ -1,4 +1,4 @@
-# Rick and Morty — API Consumer
+# Rick and Morty - API Consumer
 
 A small React + TypeScript app that consumes the official Rick and Morty GraphQL API. It features a portal landing scene and a characters view with pagination, status badge, species, origin, and first episode name.
 
