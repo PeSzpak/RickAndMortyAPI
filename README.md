@@ -1,185 +1,100 @@
-# Rick and Morty - API Consumer
+# Rick and Morty API Consumer
 
-A small React + TypeScript app that consumes the official Rick and Morty GraphQL API. It features a portal landing scene and a characters view with pagination, status badge, species, origin, and first episode name.
+A React + TypeScript app that reads the public Rick and Morty GraphQL API with Apollo Client: an animated portal landing screen, then a paginated character grid with search by name.
 
----
+![Portal landing screen](docs/media/portal.webp)
 
-## Overview
+![Character grid, page 1 of 42](docs/media/chars.webp)
 
-This project uses Apollo Client to query `https://rickandmortyapi.com/graphql` and render character cards with a simple, responsive UI.
+![Search by name filtering to "pickle"](docs/media/search.webp)
 
-- Stack: React, TypeScript, Vite, Apollo Client
-- Data source: Rick and Morty GraphQL API
-- Views:
-  - Portal landing screen with animated portal
-  - Characters listing with pagination
+## Features
 
-![Rick Sanchez](public/sanchez.png)
+- Portal landing screen made with CSS only (animated portal, bubbles and layered title). "See Characters" switches to the grid.
+- Character cards with image, status badge (`alive`, `dead`, `unknown` each with its own color), species, origin and gender.
+- Pagination with Previous / Next, disabled when the API returns no `prev` / `next` page. A badge shows "Page X of Y".
+- Search by name: each keystroke resets to page 1 and refetches with the `name` filter. "Clear Search" resets it.
+- Loading, error and empty states. An empty search result shows `public/nothing.png` and "Nothing was left".
 
----
+## How it works
 
-## Quick Start
-
-- Prerequisites: Node.js 18+
-- Install and run locally:
-
+```mermaid
+flowchart LR
+  App -- showCharacters = false --> Portal
+  App -- showCharacters = true --> RickAndMorty
+  RickAndMorty -- "useQuery(GET_CHARACTERS, { page, name })" --> Apollo[ApolloClient<br/>InMemoryCache]
+  Apollo -- POST --> API[(rickandmortyapi.com/graphql)]
+  RickAndMorty --> CharacterCard
 ```
+
+- `src/main.tsx` wraps the app in `ApolloProvider` with the client from `components/rickandmorty/graphql.ts` (`HttpLink` + `InMemoryCache`).
+- `src/App.tsx` holds a single `showCharacters` boolean; there is no router.
+- `RicksAndMortyCharacters.tsx` owns `page` and `searchTerm`, runs the query and renders the top bar, page badge and pagination.
+- `CharacterCard.tsx` renders the grid (at most 20 cards, the API page size) and the loading / empty / error states.
+
+### GraphQL query
+
+`src/components/rickandmorty/graphQuery.ts`:
+
+```graphql
+query GetCharacter($page: Int!, $name: String) {
+  characters(page: $page, filter: { name: $name }) {
+    info { count pages next prev }
+    results {
+      id name status species image gender
+      origin { name }
+      location { name }
+    }
+  }
+}
+```
+
+`name` is sent as `null` when the search box is empty, which returns all characters. The API is public and needs no key. You can try the same query in the API's playground at https://rickandmortyapi.com/graphql.
+
+## Stack
+
+React 19, TypeScript 5.9, Vite 7, Apollo Client 4, graphql 16, plain CSS. Fonts: Creepster (Google Fonts) and a "Get Schwifty" webfont loaded from a CodePen CDN URL in the CSS.
+
+## Running locally
+
+Prerequisite: Node.js 20.19+ (required by Vite 7). Internet access is needed for the API and the fonts.
+
+```bash
 npm install
-npm run dev
+npm run dev       # http://localhost:5173
+npm run build     # tsc -b + vite build, output in dist/
+npm run preview   # serves the build
+npm run lint
 ```
 
-- Build for production:
+The build is static and can be hosted on any static host (Vercel, Netlify, GitHub Pages).
+
+## Project structure
 
 ```
-npm run build
-npm run preview
+src/
+├── main.tsx                      # ApolloProvider + root
+├── App.tsx                       # portal <-> characters toggle
+└── components/
+    ├── CharacterCard.tsx         # grid + loading/empty/error states
+    └── rickandmorty/
+        ├── graphql.ts            # ApolloClient
+        ├── graphQuery.ts         # GET_CHARACTERS
+        ├── RicksAndMortyCharacters.tsx
+        ├── characters.css
+        └── portal/
+            ├── portal.tsx
+            ├── fullscene.css
+            └── style.css
+public/                           # favicon (Rick.png), nothing.png and character art
 ```
 
-![Morty joins the adventure](public/morty.png)
+## Ideas for next steps
 
----
-
-## Project Structure
-
-- `src/`
-  - `App.tsx` — toggles between portal and characters view
-  - `main.tsx` — React root and ApolloProvider wiring
-  - `components/rickandmorty/`
-    - `portal/portal.tsx` — animated portal landing (CSS only)
-    - `graphQuery.ts` — GraphQL query for characters
-    - `graphql.ts` — Apollo client configuration
-    - `RicksAndMortyCharacters.tsx` — characters grid, pagination, loading/error states
-    - `characters.css`, `portal/*.css` — styling assets
-- `public/`
-  - Brand images used in the app and documentation: `morty.png`, `summer.png`, `beth.png`, `jerry.png`, `sanchez.png`, `Rick.png`
-
-![Summer UI vibes](public/summer.png)
-
----
-
-## Architecture
-
-- Rendering flow:
-  - `App.tsx` maintains `showCharacters` state to switch views.
-  - `Portal` is a purely visual entry screen.
-  - `RickAndMorty` executes a paged GraphQL query via Apollo and renders a grid of character cards.
-- Data flow:
-  - `ApolloClient` configured in `graphql.ts` using `HttpLink` + `InMemoryCache`.
-  - `useQuery` in `RicksAndMortyCharacters.tsx` runs `GET_CHARACTERS` with `page` variable.
-  - UI reads `loading`, `error`, and `data` from Apollo to render states.
-
-![Beth — architecture and data flow](public/beth.png)
-
----
-
-## Data Model
-
-The characters view expects the following data from GraphQL:
-
-- `Character` fields used: `id`, `name`, `status`, `species`, `image`, `origin { name }`, `location { name }`, `episode { name }` (first episode name per API’s `results.episode[0]` semantics)
-- `characters.info`: `count`, `pages`, `next`, `prev` for pagination controls
-
-In code, the interface shape (simplified):
-
-- Character: id (string), name (string), status (string), species (string), image (string), episode { name }, origin { name }, location { name }
-- Query vars: page (number)
-
-![Jerry keeps it practical](public/jerry.png)
-
----
-
-## GraphQL Query
-
-Defined in `components/rickandmorty/graphQuery.ts`:
-
-- Query: `GetCharacter(page: Int!)`
-- Endpoint: `https://rickandmortyapi.com/graphql`
-- Fields fetched:
-  - `characters.info { count, pages, next, prev }`
-  - `characters.results { id, name, status, species, image, episode { name }, origin { name }, location { name } }`
-
-Usage in `RicksAndMortyCharacters.tsx`:
-
-- `useQuery(GET_CHARACTERS, { variables: { page } })`
-- Handles `loading`, `error`, and `!data` with simple UI states
-
----
-
-## UI and Styling
-
-- CSS files:
-  - `characters.css` — grid layout, cards, status badges, pagination buttons, starry background
-  - `portal/fullscene.css` + `portal/style.css` — animated portal and title sequences
-- UX behaviors:
-  - Status badge color changes via `status-<state>` classes
-  - Pagination buttons disabled based on `info.prev` and `info.next`
-  - Back button returns to Portal
-- Images are used for branding in header/sections and throughout this README.
-
-![Style notes from Summer](public/summer.png)
-
----
-
-## Error Handling
-
-- Loading state: shows a centered “Loading...” message
-- Error state: renders the `error.message` from Apollo
-- Empty state: shows “No data” if response is missing
-- Pagination guards: Next/Prev buttons disabled when `info.next/prev` are null
-
----
-
-## Performance Considerations
-
-- Apollo’s `InMemoryCache` provides normalized caching for repeated queries
-- UI constrains render to `slice(0, 20)` to avoid oversized grids
-- Potential improvements:
-  - Prefetch adjacent pages when hovering Next/Prev
-  - Debounce page changes for rapid navigation
-  - Use `notifyOnNetworkStatusChange` to refine loading UX
-
----
-
-## Testing Notes
-
-- Component tests can mock Apollo with `MockedProvider`
-- Scenarios:
-  - Renders loading, error, and data states
-  - Pagination button enable/disable logic
-  - Card rendering of status/species/origin/episode fields
-
----
-
-## Deployment
-
-- Build output is static in `dist/`
-- Can be hosted via Vercel, Netlify, or GitHub Pages
-- Recommended CI steps: lint, typecheck, tests, build
-
----
-
-## API Consumer Next Steps
-
-Planned features to expand the API consumer:
-
-- Locations module:
-  - Query `location` list with filters by `type` and `dimension`
-  - Location detail page linking residents to character cards
-- Episodes module:
-  - Query `episode` list with search by name/code (e.g., `S01E01`)
-  - Episode detail page listing participating characters
-- Style upgrades:
-  - Theming (dark/light) via CSS variables
-  - Subtle hover animations and list transitions
-  - Responsive grid refinements and skeleton loaders
-- Accessibility:
-  - Keyboard navigation, ARIA roles, AA contrast compliance
-
-![Sanchez suggests next steps](public/sanchez.png)
-
----
+- Locations and episodes pages (the API has `locations` and `episodes` queries with filters).
+- Debounce the search input; today every keystroke fires a request.
+- Component tests with Apollo's `MockedProvider` (there are no tests yet).
 
 ## Credits
 
-- Data: Official Rick and Morty API — https://rickandmortyapi.com
-- Images: Project `public/` folder (Morty, Summer, Beth, Jerry, Sanchez, Rick, cabeca, calca, pickle, rickpickle, robot)
+Data and character images: [The Rick and Morty API](https://rickandmortyapi.com). Rick and Morty is a trademark of its owners; this is a non-commercial study project.
